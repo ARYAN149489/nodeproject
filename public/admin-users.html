@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin-Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+    <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script>
+        $(document).ready(function(){
+            $("#infdash").html("Welcome Admin");
+        })
+        var module=angular.module("mymodule",[]);
+        var controller=module.controller("mycontroller",function($scope,$http)
+        {
+            $scope.jsonaryall;
+            //----------------------            
+            //==============================
+            $scope.showalluser=function()
+            {
+                let url="/fetch-all-user";
+                $http.get(url).then(allwell,notwell)//http is used to send ajax req
+                
+                    function allwell(response){
+                    //alert(JSON.stringify(response.data));
+                    $scope.jsonaryall=response.data;
+                    }
+                    function notwell(err){
+                        alert(err);
+                    }
+            }
+            //==========================================
+            $scope.deleteuser=function(email){
+                let url="/delete-one?email="+email;
+                $http.get(url).then(allwell,notwell)
+
+                function allwell(response){
+
+                    //alert(response.data);
+                    $scope.showalluser();
+                }
+                function notwell(err){
+
+                    alert(err);
+                }
+            }
+            //==============================================
+
+            $scope.blockuser=function(email){
+
+                let url="/block-one?email="+email;
+                $http.get(url).then(allwell,notwell)
+
+                function allwell(response)
+                {
+                    //alert(response.data);
+                    $scope.showalluser();
+
+                }
+                function notwell(err)
+                {
+                    alert(err);
+                }
+            }
+            //====================================================
+
+            $scope.resumeuser=function(email){
+                let url="/resume-one?email="+email;
+                $http.get(url).then(allwell,notwell)
+
+                function allwell(response){
+                    //alert(response.data);
+                    $scope.showalluser();
+                }
+                function notwell(err){
+                    alert(err);
+                }
+
+            }
+           
+        })
+        
+    </script>
+    <style>
+        #infdash{
+        background-color: lightskyblue;
+        color: white;
+        height: 40px;
+        padding-left: 20px;
+        padding-top: 7.5px;
+      }
+      #indash{
+        background-color: lightgreen;
+        color: white;
+        height: 50px;
+        padding-top: 7px;
+      }
+    </style>
+
+</head>
+<body ng-app="mymodule" ng-controller="mycontroller" ng-init="showalluser();">
+    <!-- Nav bar -->
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" ><i class="fa-sharp-duotone fa-solid fa-handshake"></i> &nbsp&nbsp promo.com</a>
+            <form class="d-flex" role="search">
+                <button class="btn btn-outline-success" type="button" style="color: red; border-color: red;" 
+                data-bs-toggle="modal" data-bs-target="#logoutmodal">Logout</button>
+                
+                
+            </form>
+        </div>
+    </nav>
+    <!-- Logout Modal -->
+    <div class="modal" tabindex="-1" id="logoutmodal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Logout</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to LOGOUT ?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="logoutt" onclick="dologout();">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function dologout(){
+        localStorage.removeItem("activeuser");
+        location.href="index.html";
+      }
+    </script>
+    <div id="infdash" ></div>
+    <div id="indash"><h2><center>USERS</center></h4></div>
+
+    <center>
+        <!-- <button type="button" class="btn btn-primary" ng-click="">ALL USERS</button> -->
+
+
+    <div class="container">
+        <table class="table">
+
+            <tr>
+                <td>S.No</td>
+                <td>EMAIL</td>
+                <td>PASSWORD</td>
+                <td>USER TYPE</td>
+                <td>STATUS</td>
+            </tr>
+
+
+            <tr ng-repeat="obj in jsonaryall">
+                <td>
+                    {{$index+1}}
+                </td>
+                <td>
+                    {{obj.email}}
+                </td>
+                <td>
+                    {{obj.pwd}}
+                </td>
+                <td>
+                    {{obj.utype}}
+                </td>
+                <td>
+                    {{obj.status}}
+                </td>
+            
+            <td>
+                <button type="button" class="btn btn-primary" ng-click="deleteuser(obj.email);">DELETE</button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary" ng-click="blockuser(obj.email);">BLOCK</button>
+
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary" ng-click="resumeuser(obj.email);">RESUME</button>
+            </td>
+            </tr>
+        </table>
+    </div>
+    </center>
+</body>
+</html>

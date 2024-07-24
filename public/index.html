@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+    <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <script>
+        $(document).ready(function(){
+          $(document).ajaxStart(function(){
+                  $("#bg").css("display","block");
+                  $("#wait").css("display","block");
+              })
+              $(document).ajaxStop(function(){
+                  $("#wait").css("display","none");
+                  $("#bg").css("display","none");
+              })
+  
+          $("#btnLogin").click(function(){
+            let obj={
+              type:"get",
+              url:"/check-login-details",
+              data:{
+                txtemail:$("#txtemail").val(),
+                txtpwd:$("#txtpwd").val(),
+              }
+            }
+            $.ajax(obj).done(function(result){
+              $("#errlog").html(result);
+              if (result === "Influencer")
+              {
+                location.href = "infl-dash.html"
+                localStorage.setItem("activeuser",$("#txtemail").val());
+              }
+              else if (result === "Collaborator")
+              {
+                location.href = "collaborator-dash.html";
+                localStorage.setItem("activeuser",$("#txtemail").val());
+              }
+              else
+                alert(resp);
+            }).fail(function(err){
+              $("#errlog").html(err.statusText);
+            })
+          })
+          $("#forgot").click(function(){
+            let obj={
+              type:"get",
+              url:"/forget-password",
+              data:{
+                femail:$("#femail").val()
+              }
+            }
+            $.ajax(obj).done(function(result){
+              $("#errf").html(result);
+            }).fail(function(err){
+              $("#errf").html(err.statusText);
+            })
+          })
+        })
+      </script>
+      <style>
+        #wait{
+                position: absolute;
+                width: 100px; height:100px;
+                background-image: url(pics/icons8-spinner.gif);
+                background-size: contain;
+                top: 30%;
+                left: 40%;
+                border: 1px black solid;
+                display: none;
+        }
+        #bg{
+                width: 100%;    height: 100%;  
+                background-color: gainsboro;
+                display: none;
+                position: absolute;
+                opacity: .5;
+        }
+        </style>
+
+
+</head>
+<body style="background-color: white;">
+  <div id="bg"></div>
+  <div id="wait"></div>
+    
+  <!-- Nav bar -->
+    <nav class="navbar bg-body-tertiary" class="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" ><i class="fa-sharp-duotone fa-solid fa-handshake"></i> &nbsp&nbsp promo.com</a>
+            <form class="d-flex" role="search">
+                <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
+                <button class="btn btn-outline-success" type="button" data-bs-toggle="modal"
+                    data-bs-target="#signupModal" id="buttons">Signup</button>
+                <button class="btn btn-outline-success" type="button" style="margin-left:10px" 
+                data-bs-target="#loginModal"  data-bs-toggle="modal" id="buttons">Login</button>
+                <!-- <button class="btn btn-outline-success" type="button" style="margin-left:10px" 
+                data-bs-toggle="modal" > <a href="/infl-dashboard">Influencer-dashboard</a></button> -->
+                <!-- <a href="/infl-dashboard" class="btn btn-outline-success" style="margin-left:10px">Influencer-dashboard</a> -->
+                <!-- <a href="/admin-dashboard" class="btn btn-outline-success" style="margin-left: 10px;">Admin dashboard</a> -->
+                <a href="#services" class="btn btn-outline-success" style="margin-left: 10px;">Our Services</a>
+                <a href="#team" class="btn btn-outline-success" style="margin-left: 10px;">Our Team</a>
+                <a href="#reach" class="btn btn-outline-success" style="margin-left: 10px;">Reach Us</a>
+                
+            </form>
+        </div>
+    </nav>
+
+<!--Signup Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Signup Here</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form  method="post" >
+                <div class="mb-3">
+                  <label for="txtEmail" class="form-label" >Email address</label>
+                  <input type="email" name="txtEmail" class="form-control" id="txtEmail" aria-describedby="emailHelp" required>
+                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="txtPwd" class="form-label">Password</label>
+                  <input type="password" name="txtPwd" class="form-control" required id="txtPwd">
+                </div>
+                <div class="mb-3">
+                    Select Type: 
+                    <select  name="type" required class="form-select" aria-label="Default select example">
+                        <!-- <option value="none">Select</option> -->
+                        <option value="" disabled selected >Select User Type</option>
+                        <option value="Collaborator">Collaborator</option>
+                        <option value="Influencer">Influencer</option>
+                        
+                    </select> 
+                </div>
+                <input type="submit" value="Signup" class="btn btn-primary" formaction="/signup-details">
+                </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+<!--Login Modal-->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Login Here</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="get">
+                <div class="mb-3">
+                  <label for="txtemail" class="form-label" >Email address</label>
+                  <input type="email" required class="form-control" id="txtemail" name="txtemail" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                  <label for="txtpwd" class="form-label">Password</label>
+                  <input type="password" required class="form-control" id="txtpwd" name="txtpwd">
+                </div>
+                
+                <input type="button" id="btnLogin" name="btnLogin" value="Login" class="btn btn-primary">
+                <input type="button" id="btnforget" value="Forgot Password" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#forget"><br>
+                <span id="errlog"></span>
+                </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Forget modal-->
+  <div class="modal fade" id="forget" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Forgot Password</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form  method="post" >
+                <div class="mb-3">
+                  <label for="txtEmail" class="form-label" >Email address</label>
+                  <input type="email" name="femail" class="form-control" id="femail" aria-describedby="emailHelp">
+                </div>
+                
+                <input type="button" id="forgot" name="forgot" value="Send email" class="btn btn-primary" formaction="/forget-password"><br>
+                <span id="errf"></span>
+                </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+        <br><br>
+        <div id="carouselExample" class="carousel slide">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <center><img src="/pics/Screenshot 2024-07-17 130344.png" height="300px" class="d-block w-50" alt="..." ></center>
+              </div>
+              <!-- <div class="carousel-item">
+                <center><img src="/public/pics/image.png" height="300px" class="d-block w-50" alt="..." ></center>
+              </div>
+              <div class="carousel-item">
+                <center><img src="/public/pics/computer-icons-user-profile-circle-abstract-449b748c464eba566641217282fff3a1.png" height="300px" class="d-block w-50" alt="..."></center>
+              </div> -->
+            </div>
+            <!-- <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button> -->
+          </div>
+        
+          <div id="services" style="height: 50px; background-color: lightgreen; color: white; padding-top: 10px;">
+            <center>
+            <h3>OUR SERVICES</h3>
+        </center>
+          </div>
+        <br><br>
+          <div class="container text-center">
+            <div class="row row-cols-3">
+              <div class="col">
+                <div class="card">
+                <img src="/pics/Collaborations.png" class="card-img-top" >
+                <div class="card-body">
+                  <h5 class="card-title">COLLABORATIONS </h5>
+                  <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+                </div>
+              </div>
+            </div>
+              <div class="col">
+                <div class="card">
+                    <img src="/pics/24 7.png" class="card-img-top" >
+                    <div class="card-body">
+                      <h5 class="card-title">24*7 WORKING</h5>
+                      <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+                    </div>
+                  </div>
+              </div>
+              <div class="col">
+                <div class="card">
+                    <img src="/pics/promotions.png" class="card-img-top" >
+                    <div class="card-body">
+                      <h5 class="card-title">PROMOTIONS</h5>
+                      <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+                    </div>
+                  </div>
+              </div>
+              
+            </div>
+          </div>
+          <br><br>
+        
+          <!-- ================================================= -->
+          <div id="team" style="height: 50px; background-color: lightgreen; color: white; padding-top: 10px;">
+            <center>
+            <h3>OUR TEAM</h3>
+        </center>
+          </div>
+        <br><br>
+        
+        <div class="container text-center">
+            <div class="row">
+              <div class="col">
+                    
+                    <div style="width: 450px; height: 250px; background-color: lightskyblue;">
+                        <div style="width: 200px; height: inherit; float: left; background-color: white; padding-top: 50px;">
+                            <center>
+                            <img src="/pics/sirpic.jpg" class="card-img-top" alt="..." style="width: 150px; height: 150px ; border-radius: 50%; border: 1px solid white; background-color: black;">
+                            </center>
+                        </div>
+                      
+                        <div style="float: left;color: white; height: inherit; width: 250px;" >
+                            <p class="card-text"><h5>Under The Guidance</h5></p>
+                            <p class="card-text">Rajesh Bansal</p>
+                            <p class="card-text">Author Of Real Java</p>
+                        </div>
+                     
+                  </div>
+              </div>
+            
+              <div class="col">
+                <div style="width: 450px; height: 250px; background-color: lightskyblue;">
+                    <div style="width: 200px; height: inherit; float: left; background-color: white; padding-top: 50px;">
+                        <center>
+                        <img src="/pics/mypic.jpg" class="card-img-top" alt="..." style="width: 150px; height: 150px ; border-radius: 50%; border: 1px solid white; background-color: black;">
+                        </center>
+                    </div>
+                  
+                    <div style="float: left; color: white; height: inherit; width: 250px;" >
+                        <p class="card-text"><h5>Developed By</h5></p>
+                        <p class="card-text">Aryan Kansal</p>
+                    </div>
+                 
+              </div>
+              </div>
+            </center>
+            </div>
+          </div>
+          <br><br>
+          <div id="reach" style="height: 50px; background-color: lightgreen; color: white; padding-top: 10px;">
+            <center>
+            <h3>REACH US</h3>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3442.8072010873416!2d76.36212627491747!3d30.356428803722835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391028ab86533db5%3A0x93cc1f72eae1c9a8!2sThapar%20Institute%20of%20Engineering%20%26%20Technology!5e0!3m2!1sen!2sin!4v1721071788347!5m2!1sen!2sin" 
+            width="600" height="450" style="border:0; margin-top: 10px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </center>
+        <br><br>
+        <div style="margin-top: -45px; background-color: lightgreen; padding-left: 15px;" >Copywrite@Kansal</div>
+        
+
+</body >
+</html>

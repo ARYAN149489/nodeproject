@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <style>
+      #wait{
+              position: absolute;
+              width: 100px; height:100px;
+              background-image: url(pics/icons8-spinner.gif);
+              background-size: contain;
+              top: 30%;
+              left: 40%;
+              border: 1px black solid;
+              display: none;
+      }
+      #bg{
+              width: 100%;    height: 100%;  
+              background-color: gainsboro;
+              display: none;
+              position: absolute;
+              opacity: .5;
+      }
+      #infdash{
+        background-color: lightskyblue;
+        color: white;
+        height: 40px;
+        padding-left: 20px;
+        padding-top: 7.5px;
+      }
+      #indash{
+        background-color: lightgreen;
+        color: white;
+        height: 50px;
+        padding-top: 7px;
+      }
+   </style>
+
+    <script>
+      $(document).ready(function(){
+        if(localStorage.getItem("activeuser")==null){
+            location.href="index.html";
+            return;
+          }
+        let active=localStorage.getItem("activeuser");
+        $("#infdash").html("Welcome "+active);
+            $("#btxtemail").val(active).prop("readonly",true);
+            $("#chemail").val(active).prop("readonly",true);
+
+        $(document).ajaxStart(function(){
+                $("#bg").css("display","block");
+                $("#wait").css("display","block");
+            })
+            $(document).ajaxStop(function(){
+                $("#wait").css("display","none");
+                $("#bg").css("display","none");
+            })
+
+
+        $("#btnposting").click(function(){
+
+          let obj ={
+            type:"get",
+            url:"/event-posting-process",
+            data:{
+              btxtemail:$("#btxtemail").val(),
+              btxtname:$("#btxtname").val(),
+              btxtdate:$("#btxtdate").val(),
+              btxtcity:$("#btxtcity").val(),
+              btime:$("#btime").val(),
+              btxtvenue:$("#btxtvenue").val()
+
+
+            }
+          }
+          $.ajax(obj).done(function(resp){
+            
+              $("#errspan").html(resp);
+
+          }).fail(function(err){
+
+            alert(err.statusText);
+
+          })
+
+        })
+        $("#chngpwd").click(function(){
+          let obj={
+            type:"get",
+            url:"/pass-change-process",
+            data:{
+              chemail:$("#chemail").val(),
+              opwd:$("#opwd").val(),
+              npwd:$("#npwd").val(),
+              nPwd:$("#nPwd").val()
+            }
+          }
+          $.ajax(obj).done(function(resp){
+            $("#errspan2").html(resp);
+          }).fail(function(err){
+            alert(err.statusText);
+          })
+        })
+      });
+
+
+
+    </script>
+  </head>
+  <body>
+    <!-- Nav bar -->
+    <nav class="navbar bg-body-tertiary">
+      <div class="container-fluid">
+          <a class="navbar-brand" ><i class="fa-sharp-duotone fa-solid fa-handshake"></i> &nbsp&nbsp promo.com</a>
+          <form class="d-flex" role="search">
+              <button class="btn btn-outline-success" type="button" style="color: red; border-color: red;" 
+              data-bs-toggle="modal" data-bs-target="#logoutmodal">Logout</button>
+              
+              
+          </form>
+      </div>
+  </nav>
+  <!-- Logout Modal -->
+  <div class="modal" tabindex="-1" id="logoutmodal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Logout</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to LOGOUT ?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="logoutt" onclick="dologout();">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function dologout(){
+      localStorage.removeItem("activeuser");
+      location.href="index.html";
+    }
+  </script>
+    <div id="bg"></div>
+    <div id="wait"></div>
+    <div id="infdash" ></div>
+    <div id="indash"><h2><center>DASHBOARD</center></h4></div>
+    <br><br>
+    <div class="container text-center">
+      <div class="row">
+        <div class="col">
+          <div class="card" style="width: 18rem">
+            <center>
+            <img src="pics/computer-icons-user-profile-circle-abstract-449b748c464eba566641217282fff3a1.png" class="card-img-top" style="width:150px; height: 150px;"/>
+          </center>
+            <div class="card-body">
+              <!--<h5 class="card-title">Card title</h5>-->
+              
+              <a href="/infl-profile" class="btn btn-primary">PROFILE</a>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card" style="width: 18rem">
+            <center>
+              <img src="pics/computer-icons-user-profile-circle-abstract-449b748c464eba566641217282fff3a1.png" class="card-img-top" style="width:150px; height: 150px;"/>
+            </center>
+            <div class="card-body">
+              <!--<h5 class="card-title">Card title</h5>-->
+              <a href="/infl-events" class="btn btn-primary">YOUR EVENTS</a>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card" style="width: 18rem">
+            <center>
+              <img src="pics/computer-icons-user-profile-circle-abstract-449b748c464eba566641217282fff3a1.png" class="card-img-top" style="width:150px; height: 150px;"/>
+            </center>
+            <div class="card-body">
+              <!--<h5 class="card-title">Card title</h5>-->
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adevent">
+                ADD UPCOMING EVENT
+              </button>
+              
+            </div>
+          </div>
+        </div>
+        
+        <div class="col">
+          <div class="card" style="width: 18rem">
+            <center>
+              <img src="pics/computer-icons-user-profile-circle-abstract-449b748c464eba566641217282fff3a1.png" class="card-img-top" style="width:150px; height: 150px;"/>
+            </center>
+            <div class="card-body">
+              <!--<h5 class="card-title">Card title</h5>-->
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SETTINGS">
+              SETTINGS
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add event Modal -->
+<div class="modal fade" id="adevent" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">NEW BOOKING</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <form class="row g-3" >
+          
+          <div class="col-md-12">
+            <label for="inputEmail4" class="form-label">Email</label>
+            <input type="email" class="form-control" name="btxtemail" id="btxtemail">
+          </div>
+          <div class="col-md-12">
+            <label for="inputEmail4" class="form-label">EVENT NAME</label>
+            <input type="text" class="form-control" name="btxtname" id="btxtname">
+          </div>
+          <div class="col-md-6">
+            <label for="inputAddress" class="form-label">DATE OF EVENT</label>
+            <input type="date" class="form-control" name="btxtdate" id="btxtdate" >
+          </div>
+          <div class="col-md-6">
+            <label for="inputAddress2" class="form-label">START TIME</label>
+            <input type="time" class="form-control" name="btime" id="btime" placeholder="Apartment, studio, or floor">
+          </div>
+          <div class="col-md-6">
+            CITY : <br>
+            <input type="text" class="form-control" name="btxtcity" id="btxtcity">
+          </div>
+          
+          <div class="col-md-6">
+            <label for="inputCity" class="form-label">venue</label>
+            <input type="text" class="form-control" name="btxtvenue" id="btxtvenue">
+          </div>
+          
+          <div class="col-12">
+            <div class="form-check">
+
+            </div>
+          </div>
+          <div class="col-12">
+            <input type="button" name="btnposting" id="btnposting" value="POST THE EVENT" class="btn btn-primary">
+          </div>
+        
+        </form>
+      
+      </div>
+      <div class="modal-footer" class="col-12">
+        <center>
+        <span id="errspan">* </span>
+      </center>
+      </div>
+    </div>
+  </div>
+</div>
+
+        <!--Settings Modal-->
+        <div class="modal fade" id="SETTINGS" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">SETTINGS</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                
+                <form class="row g-3" >
+                  
+                  <div class="col-md-12">
+                    <label for="inputEmail4" class="form-label">Email</label>
+                    <input type="email" class="form-control" name="chemail" id="chemail">
+                  </div>
+                  <div class="col-md-12">
+                    <label for="inputEmail4" class="form-label">Old Password</label>
+                    <input type="password" class="form-control" name="opwd" id="opwd">
+                  </div>
+                  <div class="col-md-12">
+                    <label for="inputEmail4" class="form-label">New Password</label>
+                    <input type="password" class="form-control" name="npwd" id="npwd">
+                  </div>
+                  
+                  <div class="col-md-12">
+                    <label for="inputCity" class="form-label">Enter Password Again</label>
+                    <input type="password" class="form-control" name="nPwd" id="nPwd">
+                  </div>
+                  <div class="col-12">
+                    <div class="form-check">
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <input type="button" name="chngpwd" id="chngpwd" value="Change Password" class="btn btn-primary">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer" class="col-12">
+                <center>
+                <span id="errspan2"></span>
+              </center>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
